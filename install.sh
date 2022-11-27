@@ -98,6 +98,12 @@ helm upgrade --install --wait --timeout ${HEROKLES_HELM_TIMEOUT:-3m1s} \
   --set NODE_VERSION=$NODE_VERSION || \
   {
     echo "Helm deploymet failed"
+    echo "Getting logs"
+    pods=$( kubectl -n $PROJECT get pods --no-headers -o custom-columns=":metadata.name" | grep ^${PROJECT}-${ENV} )
+    for pod in $pods ; do
+      echo "Pod: $pod"
+      kubectl -n $PROJECT logs $pod
+    done
     rollback_on_fail ${PROJECT} ${HELM_DEPLOYMENT} failed
     exit 1
   }

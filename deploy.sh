@@ -4,10 +4,11 @@ set -euo pipefail
 
 exec &> >( tee /var/log/app.log )
 
-echo "Setting up logging."
 if [ ! -z ${HEROKLES_PAPERTRAIL_BASE64+x} ] ; then
   echo "${HEROKLES_PAPERTRAIL_BASE64}" | base64 -d > /etc/log_files.yml
   remote_syslog -D --hostname $( hostname ) &
+  sleep 3
+  echo "Setting up logging."
 fi
 
 echo "Configuring aws cli."
@@ -28,7 +29,7 @@ eocre
 echo "Getting build from S3."
 aws s3 cp s3://${HEROKLES_AWS_S3_BUILDS_BUCKET}/${S3_FOLDER_NAME}/product.tgz . >/dev/null
 
-echo "Unpacking product.zip."
+echo "Unpacking product.tgz."
 tar xzf product.tgz
 rm -rf product.tgz
 
