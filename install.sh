@@ -99,7 +99,7 @@ helm upgrade --install --wait --timeout ${HEROKLES_HELM_TIMEOUT:-3m1s} \
   {
     echo "Helm deploymet failed"
     echo "Getting logs"
-    pods=$( kubectl -n $PROJECT get pods --no-headers -o custom-columns=":metadata.name" | grep ^${PROJECT}-${ENV} )
+    pods=$( kubectl -n $PROJECT get pods --no-headers -o custom-columns=":metadata.name,:status.phase" | grep ^${PROJECT}-${ENV} | tr -s ' ' | grep -v Running | cut -d' ' -f1 )
     for pod in $pods ; do
       echo "Pod: $pod"
       kubectl -n $PROJECT logs $pod
