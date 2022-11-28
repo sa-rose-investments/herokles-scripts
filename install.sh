@@ -83,7 +83,7 @@ fi
 echo "Install Helm deployment"
 
 rollback_on_fail ${PROJECT} ${HELM_DEPLOYMENT} pending
-helm upgrade --install --wait --timeout ${HEROKLES_HELM_TIMEOUT:-3m1s} \
+helm upgrade --install --wait --timeout ${HEROKLES_HELM_TIMEOUT:-2m1s} \
   -n ${PROJECT} \
   ${HELM_DEPLOYMENT} \
   ${HELM_DIRECTORY:-herokles/helm} \
